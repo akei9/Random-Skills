@@ -44,31 +44,24 @@ def parse_traits(text):
     return traits
 
 
-def plural(n, one, few, many):
-    if n == 1:
-        return one
-    if n % 10 in (2, 3, 4) and n % 100 not in (12, 13, 14):
-        return few
-    return many
-
-
 def parse_meta(text):
     def num(pattern):
         m = re.search(pattern, text)
         return int(m.group(1)) if m else None
 
-    date = re.search(r"\*\*Data skanu:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
-    episodes = num(r"Epizody zadaniowe\s*\|\s*\**(\d+)")
-    sessions = num(r"Przeskanowane\s*\|\s*(\d+)")
-    days = num(r"\((\d+)\s*dni\)")
+    # Report labels: English first, Polish kept so older reports still parse.
+    date = re.search(r"\*\*(?:Scan date|Data skanu):\*\*\s*(\d{4}-\d{2}-\d{2})", text)
+    episodes = num(r"(?:Task episodes|Epizody zadaniowe)\s*\|\s*\**(\d+)")
+    sessions = num(r"(?:Sessions|Scanned|Przeskanowane)\s*\|\s*(\d+)")
+    days = num(r"\((\d+)\s*(?:days|dni)\)")
 
     parts = []
     if episodes is not None:
-        parts.append(f"{episodes} {plural(episodes, 'epizod', 'epizody', 'epizodów')}")
+        parts.append(f"{episodes} {'episode' if episodes == 1 else 'episodes'}")
     if sessions is not None:
-        parts.append(f"{sessions} {plural(sessions, 'sesja', 'sesje', 'sesji')}")
+        parts.append(f"{sessions} {'session' if sessions == 1 else 'sessions'}")
     if days is not None:
-        parts.append(f"{days} {'dzień' if days == 1 else 'dni'}")
+        parts.append(f"{days} {'day' if days == 1 else 'days'}")
     return (date.group(1) if date else None), " · ".join(parts)
 
 
@@ -134,7 +127,7 @@ def main():
 
     out_dir = (args.out_dir or args.report.parent).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"mega-pajeczyna-{date}" if date else f"{args.report.stem}-pajeczyna"
+    stem = f"mega-skill-web-{date}" if date else f"{args.report.stem}-skill-web"
     html_path = out_dir / f"{stem}.html"
     png_path = out_dir / f"{stem}.png"
 

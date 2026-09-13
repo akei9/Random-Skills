@@ -20,7 +20,7 @@ A dark graphite + brushed-brass restyle of `mega-card`: the same FUT-style overa
    ```bash
    python3 ~/.claude/skills/mega-card-graphite/render.py <report.md> [--name NAME] [--out-dir DIR] [--no-png]
    ```
-   Files land next to the report as `mega-pajeczyna-<date>.html/.png`. The script errors if any of T01–T24 is missing.
+   Files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01–T24 is missing.
 3. **Look at the PNG once** (Read). Fix clipped text or overlaps in `template.html`, never in the generated file.
 4. **Publish** the HTML via Artifact (favicon `⚓`) unless the user only wants the PNG. Give the link and the PNG path.
 

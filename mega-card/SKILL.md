@@ -14,7 +14,7 @@ From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT 
    ```bash
    python3 ~/.claude/skills/mega-card/render.py <report.md> [--name NAME] [--out-dir DIR] [--no-png]
    ```
-   Default name `KRYCH`; files land next to the report as `mega-pajeczyna-<date>.html/.png`. The script errors if any of T01-T24 is missing from the report.
+   Default name `KRYCH`; files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01-T24 is missing from the report.
 3. **Look at the PNG once** (Read). Watch for clipped text and overlapping labels. Make fixes in `template.html`, not in the generated file.
 4. **Publish** the generated HTML via Artifact (favicon `🕸️`), unless the user only wants the PNG. Give the link and the PNG path.
 
@@ -34,9 +34,9 @@ From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT 
 | STR | Steering | T18, T21, T22 |
 | WER | Verification | T23, T24 |
 
-Change the groups or the (currently Polish) trait names: `GROUPS` and `NAMES` in `template.html`.
+Change the groups or trait names: `GROUPS` and `NAMES` in `template.html`.
 
 ## Report parsing
 
 - Traits: the first `| Txx | Name | eligible | applied | declined | missed | verified |` table row for each ID. Indicator table rows (a kebab-case slug in the second column) are skipped.
-- Card footer: the report labels `**Data skanu:**`, `Epizody zadaniowe`, `Przeskanowane`, `(N dni)`. A missing field is skipped. (These labels stay Polish because `render.py` matches them literally.)
+- Card footer: the report labels `**Scan date:**`, `Task episodes`, `Sessions` / `Scanned`, `(N days)` — `render.py` also accepts the Polish equivalents (`Data skanu`, `Epizody zadaniowe`, `Przeskanowane`, `dni`). A missing field is skipped.
