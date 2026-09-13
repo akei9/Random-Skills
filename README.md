@@ -20,4 +20,4 @@ cp -R mega-card ~/.claude/skills/
 
 ## Card Example
 
-<img width="1475" height="1404" alt="Screenshot 2026-09-13 at 23 54 42" src="https://github.com/user-attachments/assets/2af314d0-ffba-4bb7-bcf2-1e6fcb6c0f0e" />
+<img width="1475" height="1404" alt="Screenshot 2026-09-13 at 23 59 40" src="https://github.com/user-attachments/assets/a08bd72f-9efc-4ec6-8828-007c8338295e" />
