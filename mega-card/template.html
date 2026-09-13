@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Pajęczyna MEGA</title>
+<title>MEGA Skill Web</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap">
@@ -160,8 +160,8 @@
   <section class="left">
     <header>
       <p class="eyebrow" id="eyebrow">MEGA Assessment</p>
-      <h1>Pajęczyna umiejętności</h1>
-      <p class="sub">24 cechy pracy z agentami, zebrane w 6 statystyk jak na karcie FUT. Skala 0-100 to odsetek epizodów, w których dana praktyka wystąpiła.</p>
+      <h1>Skill web</h1>
+      <p class="sub">24 traits of working with agents, rolled up into 6 stats like a FUT card. The 0-100 scale is the share of episodes where a practice showed up.</p>
     </header>
 
     <div class="card" id="card">
@@ -171,7 +171,7 @@
           <div class="pos">ORC</div>
           <div class="tier" id="tier"></div>
         </div>
-        <svg class="hex" id="hex" viewBox="0 0 300 262" role="img" aria-label="Sześciokątny wykres 6 statystyk"></svg>
+        <svg class="hex" id="hex" viewBox="0 0 300 262" role="img" aria-label="Hexagon chart of 6 stats"></svg>
       </div>
       <div class="name" id="name"></div>
       <div class="stats" id="stats"></div>
@@ -181,16 +181,16 @@
     <dl class="key" id="key"></dl>
 
     <div class="legend">
-      <span><i style="background: var(--good)"></i>70+ mocne</span>
-      <span><i style="background: var(--mid)"></i>50-69 średnie</span>
-      <span><i style="background: var(--low)"></i>poniżej 50 do poprawy</span>
+      <span><i style="background: var(--good)"></i>70+ strong</span>
+      <span><i style="background: var(--mid)"></i>50-69 middle</span>
+      <span><i style="background: var(--low)"></i>below 50 to improve</span>
     </div>
 
-    <p class="note">Wynik cechy = (applied + declined) / eligible. Świadome pominięcie (declined) liczy się na plus. Ocena ogólna to średnia z 24 cech. ORC = orkiestrator agentów. Skan widzi tylko to, co padło w zapisie sesji, więc przy zwięzłych promptach cechy "słowne" (ograniczenia, prawa decyzyjne) wychodzą zaniżone.</p>
+    <p class="note">Trait score = (applied + declined) / eligible. A deliberate skip (declined) counts as a plus. Overall is the mean of the 24 traits. ORC = agent orchestrator. The scan only sees what made it into the session log, so with terse prompts the "verbal" traits (constraints, decision rights) come out understated.</p>
   </section>
 
   <section class="radar-box">
-    <svg class="radar" id="radar" viewBox="0 0 1060 1000" role="img" aria-label="Pajęczyna 24 cech, skala 0-100"></svg>
+    <svg class="radar" id="radar" viewBox="0 0 1060 1000" role="img" aria-label="24-trait skill web, scale 0-100"></svg>
   </section>
 </div>
 
@@ -198,39 +198,39 @@
   /*__DATA__*/
 
   const GROUPS = [
-    { code: "INT", name: "Intencja", ids: ["T01", "T02", "T05", "T06"] },
-    { code: "KTX", name: "Kontekst", ids: ["T03", "T04", "T09", "T10", "T11", "T12"] },
-    { code: "DIA", name: "Diagnoza", ids: ["T07", "T08", "T13"] },
-    { code: "DEL", name: "Delegacja", ids: ["T14", "T15", "T16", "T17", "T19", "T20"] },
-    { code: "STR", name: "Sterowanie", ids: ["T18", "T21", "T22"] },
-    { code: "WER", name: "Weryfikacja", ids: ["T23", "T24"] },
+    { code: "INT", name: "Intent", ids: ["T01", "T02", "T05", "T06"] },
+    { code: "KTX", name: "Context", ids: ["T03", "T04", "T09", "T10", "T11", "T12"] },
+    { code: "DIA", name: "Diagnosis", ids: ["T07", "T08", "T13"] },
+    { code: "DEL", name: "Delegation", ids: ["T14", "T15", "T16", "T17", "T19", "T20"] },
+    { code: "STR", name: "Steering", ids: ["T18", "T21", "T22"] },
+    { code: "WER", name: "Verification", ids: ["T23", "T24"] },
   ];
 
   const NAMES = {
-    T01: "Jasność intencji",
-    T02: "Poziom ramowania",
-    T03: "Model stanu agenta",
-    T04: "Kotwiczenie kontekstu",
-    T05: "Precyzja ograniczeń",
-    T06: "Sprawdzalna akceptacja",
-    T07: "Najpierw zrozumienie",
-    T08: "Przyczyna źródłowa",
-    T09: "Dowody w decyzji",
-    T10: "Stopniowe odsłanianie",
-    T11: "Ekonomia kontekstu",
-    T12: "Trwała pamięć",
-    T13: "Czytaj przed edycją",
-    T14: "Przygotowanie narzędzi",
-    T15: "Ocena delegacji",
-    T16: "Dekompozycja",
-    T17: "Jakość briefu",
-    T18: "Prawa decyzyjne",
-    T19: "Higiena równoległości",
-    T20: "Integracja wyników",
-    T21: "Precyzja feedbacku",
-    T22: "Sterowanie i zaufanie",
-    T23: "Domknięcie weryfikacji",
-    T24: "Uczenie po błędach",
+    T01: "Intent Clarity",
+    T02: "Problem Framing",
+    T03: "Agent State Modeling",
+    T04: "Context Anchoring",
+    T05: "Constraint Precision",
+    T06: "Falsifiable Acceptance",
+    T07: "Problem Understanding First",
+    T08: "Root-Cause Orientation",
+    T09: "Evidence Injection",
+    T10: "Progressive Disclosure",
+    T11: "Context Economy",
+    T12: "Durable Memory",
+    T13: "Inspect-Before-Edit",
+    T14: "Capability Provisioning",
+    T15: "Delegation Judgment",
+    T16: "Decomposition Skill",
+    T17: "Agent Brief Quality",
+    T18: "Decision Rights",
+    T19: "Parallelism Hygiene",
+    T20: "Result Integration",
+    T21: "Feedback Specificity",
+    T22: "Steering & Trust",
+    T23: "Verification Closure",
+    T24: "Recovery & Learning",
   };
 
   const score = id => {
@@ -245,9 +245,9 @@
 
   const groupScores = GROUPS.map(g => ({ ...g, v: Math.round(mean(g.ids.map(score))) }));
   const overall = Math.round(mean(Object.keys(NAMES).map(score)));
-  const tier = overall >= 75 ? ["ZŁOTO", "gold"] : overall >= 65 ? ["SREBRO", "silver"] : ["BRĄZ", "bronze"];
+  const tier = overall >= 75 ? ["GOLD", "gold"] : overall >= 65 ? ["SILVER", "silver"] : ["BRONZE", "bronze"];
 
-  document.getElementById("eyebrow").textContent = DATA.date ? `MEGA Assessment · skan ${DATA.date}` : "MEGA Assessment";
+  document.getElementById("eyebrow").textContent = DATA.date ? `MEGA Assessment · scan ${DATA.date}` : "MEGA Assessment";
   document.getElementById("name").textContent = DATA.name;
   document.getElementById("foot").textContent = DATA.foot;
   document.getElementById("ovr").textContent = overall;

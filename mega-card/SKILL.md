@@ -1,42 +1,42 @@
 ---
 name: mega-card
-description: Karta w stylu FIFA/FUT plus 24-ramienna pajęczyna umiejętności z raportu MEGA Assessment (mega-assessment-*.md). Generuje HTML i PNG, opcjonalnie publikuje jako artifact. Użyj gdy user prosi o kartę zawodnika, pajęczynę, radar albo wykres umiejętności z wyniku MEGA / assessmentu.
+description: FIFA/FUT-style card plus a 24-spoke skill radar from a MEGA Assessment report (mega-assessment-*.md). Generates HTML and PNG, and can publish as an artifact. Use when the user asks for a player card, skill web, radar, or skills chart from a MEGA / assessment result.
 ---
 
 # MEGA card
 
-Z raportu MEGA Assessment robi grafikę: brązowa/srebrna/złota karta FUT z oceną ogólną i 6 statystykami na sześciokącie, obok pełna pajęczyna 24 cech (0-100).
+From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT card with an overall rating and 6 stats on a hexagon, next to the full 24-trait skill web (0-100).
 
-## Kroki
+## Steps
 
-1. **Znajdź raport.** Ścieżka z argumentu. Brak argumentu: najnowszy `mega-assessment-*.md` w cwd, potem w `~/projects/tmp/`. Nic nie ma: zapytaj o ścieżkę.
-2. **Wygeneruj.** Bash z `dangerouslyDisableSandbox: true` - headless Chrome w sandboxie wisi i nie zapisuje zrzutu:
+1. **Find the report.** Path from the argument. No argument: the newest `mega-assessment-*.md` in cwd, then in `~/projects/tmp/`. Nothing found: ask for the path.
+2. **Generate.** Bash with `dangerouslyDisableSandbox: true` — headless Chrome hangs inside the sandbox and writes no screenshot:
    ```bash
-   python3 ~/.claude/skills/mega-card/render.py <raport.md> [--name NAZWISKO] [--out-dir DIR] [--no-png]
+   python3 ~/.claude/skills/mega-card/render.py <report.md> [--name NAME] [--out-dir DIR] [--no-png]
    ```
-   Domyślnie nazwisko `KRYCH`, pliki lądują obok raportu jako `mega-pajeczyna-<data>.html/.png`. Skrypt kończy się błędem, gdy w raporcie brakuje którejś z T01-T24.
-3. **Obejrzyj PNG raz** (Read). Szukaj uciętego tekstu i nachodzących etykiet. Poprawki robisz w `template.html`, nie w wygenerowanym pliku.
-4. **Opublikuj** wygenerowany HTML przez Artifact (favicon `🕸️`), chyba że user chce tylko PNG. Podaj link i ścieżkę PNG.
+   Default name `KRYCH`; files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01-T24 is missing from the report.
+3. **Look at the PNG once** (Read). Watch for clipped text and overlapping labels. Make fixes in `template.html`, not in the generated file.
+4. **Publish** the generated HTML via Artifact (favicon `🕸️`), unless the user only wants the PNG. Give the link and the PNG path.
 
-## Jak liczone
+## How it is scored
 
-- Wynik cechy = `(applied + declined) / eligible * 100`, zaokrąglony. Declined to świadome pominięcie, liczy się na plus.
-- Ocena ogólna = średnia z 24 cech. Tier karty: 75+ złoto, 65-74 srebro, poniżej brąz (progi jak w FIFA).
-- Kolory punktów: 70+ zielony, 50-69 żółty, poniżej 50 czerwony.
-- Grupy (własny podział, MEGA ich nie definiuje):
+- Trait score = `(applied + declined) / eligible * 100`, rounded. `declined` is a deliberate skip and counts as a plus.
+- Overall = mean of the 24 traits. Card tier: 75+ gold, 65-74 silver, below that bronze (FIFA-like thresholds).
+- Dot colours: 70+ green, 50-69 yellow, below 50 red.
+- Groups (a custom split; MEGA does not define them):
 
-| Kod | Grupa | Cechy |
+| Code | Group | Traits |
 |---|---|---|
-| INT | Intencja | T01, T02, T05, T06 |
-| KTX | Kontekst | T03, T04, T09, T10, T11, T12 |
-| DIA | Diagnoza | T07, T08, T13 |
-| DEL | Delegacja | T14, T15, T16, T17, T19, T20 |
-| STR | Sterowanie | T18, T21, T22 |
-| WER | Weryfikacja | T23, T24 |
+| INT | Intent | T01, T02, T05, T06 |
+| KTX | Context | T03, T04, T09, T10, T11, T12 |
+| DIA | Diagnosis | T07, T08, T13 |
+| DEL | Delegation | T14, T15, T16, T17, T19, T20 |
+| STR | Steering | T18, T21, T22 |
+| WER | Verification | T23, T24 |
 
-Zmiana grup albo polskich nazw cech: `GROUPS` i `NAMES` w `template.html`.
+Change the groups or trait names: `GROUPS` and `NAMES` in `template.html`.
 
-## Parsowanie raportu
+## Report parsing
 
-- Cechy: pierwszy wiersz tabeli `| Txx | Nazwa | eligible | applied | declined | missed | verified |` na każde ID. Wiersze tabeli wskaźników (kebab-case w drugiej kolumnie) są pomijane.
-- Stopka karty: `**Data skanu:**`, `Epizody zadaniowe`, `Przeskanowane`, `(N dni)`. Brak pola = pomijane.
+- Traits: the first `| Txx | Name | eligible | applied | declined | missed | verified |` table row for each ID. Indicator table rows (a kebab-case slug in the second column) are skipped.
+- Card footer: the report labels `**Scan date:**`, `Task episodes`, `Sessions` / `Scanned`, `(N days)` — `render.py` also accepts the Polish equivalents (`Data skanu`, `Epizody zadaniowe`, `Przeskanowane`, `dni`). A missing field is skipped.
