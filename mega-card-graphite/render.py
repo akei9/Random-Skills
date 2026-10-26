@@ -117,6 +117,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("report", type=Path, help="mega-assessment-*.md")
     parser.add_argument("--name", default="KRYCH", help="name printed on the card")
+    parser.add_argument("--archetype", help="optional headline (e.g. a MEGA archetype); --name then renders as the holder line")
+    parser.add_argument("--tagline", help="optional tagline beside the issuer row (overrides the default tier tagline)")
     parser.add_argument("--out-dir", type=Path, help="default: the report's directory")
     parser.add_argument("--no-png", action="store_true", help="write HTML only")
     args = parser.parse_args()
@@ -132,6 +134,10 @@ def main():
     png_path = out_dir / f"{stem}.png"
 
     data = {"name": args.name.upper(), "date": date, "foot": foot, "traits": traits}
+    if args.archetype:
+        data["archetype"] = args.archetype
+    if args.tagline:
+        data["tagline"] = args.tagline
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     html = TEMPLATE.read_text(encoding="utf-8").replace("/*__DATA__*/", f"const DATA = {payload};")
     html_path.write_text(html, encoding="utf-8")

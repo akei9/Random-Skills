@@ -18,9 +18,9 @@ A dark graphite + brushed-brass restyle of `mega-card`: the same FUT-style overa
 1. **Find the report.** Path from the argument; otherwise the newest `mega-assessment-*.md` in cwd. Nothing found: ask for the path.
 2. **Generate.** Headless Chrome hangs in the sandbox, so run with `dangerouslyDisableSandbox: true`:
    ```bash
-   python3 ~/.claude/skills/mega-card-graphite/render.py <report.md> [--name NAME] [--out-dir DIR] [--no-png]
+   python3 ~/.claude/skills/mega-card-graphite/render.py <report.md> [--name NAME] [--archetype TEXT] [--tagline TEXT] [--out-dir DIR] [--no-png]
    ```
-   Files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01–T24 is missing.
+   Files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01–T24 is missing. With `--archetype` the headline shows that text (e.g. a MEGA archetype such as "The Architect") and `--name` drops to a cardholder line beneath it; without it, `--name` is the headline.
 3. **Look at the PNG once** (Read). Fix clipped text or overlaps in `template.html`, never in the generated file.
 4. **Publish** the HTML via Artifact (favicon `⚓`) unless the user only wants the PNG. Give the link and the PNG path.
 
