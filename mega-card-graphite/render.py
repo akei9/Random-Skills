@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Render a FUT-style skill card and a 24-spoke radar from a MEGA Assessment report."""
 import argparse
+import datetime
 import json
 import re
 import shutil
@@ -65,6 +66,29 @@ def parse_meta(text):
     return (date.group(1) if date else None), " · ".join(parts)
 
 
+def from_record(obj, date_override=None):
+    """Build (traits, date, foot) from a MEGA record JSON (the challenge POST body)."""
+    traits = {}
+    for t in obj.get("traits", []):
+        tid = t.get("trait_id")
+        c = t.get("counts", {})
+        if tid:
+            traits[tid] = [int(c.get("eligible", 0)), int(c.get("applied", 0)), int(c.get("declined", 0))]
+    missing = [f"T{i:02d}" for i in range(1, 25) if f"T{i:02d}" not in traits]
+    if missing:
+        sys.exit(f"Record JSON has no trait counts for: {', '.join(missing)}")
+    cov = obj.get("coverage", {})
+    parts = []
+    episodes = cov.get("task_episodes")
+    if episodes is not None:
+        parts.append(f"{episodes} {'episode' if episodes == 1 else 'episodes'}")
+    days = cov.get("window_days")
+    if days is not None:
+        parts.append(f"{days} {'day' if days == 1 else 'days'}")
+    date = date_override or datetime.date.today().isoformat()
+    return traits, date, " · ".join(parts)
+
+
 def find_chrome():
     for candidate in CHROME_CANDIDATES:
         path = candidate if candidate.startswith("/") and Path(candidate).exists() else shutil.which(candidate)
@@ -115,17 +139,22 @@ def render_png(html_path, png_path, chrome):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("report", type=Path, help="mega-assessment-*.md")
+    parser.add_argument("report", type=Path, help="a MEGA record JSON (the challenge POST body) or a mega-assessment-*.md report")
     parser.add_argument("--name", default="KRYCH", help="name printed on the card")
     parser.add_argument("--archetype", help="optional headline (e.g. a MEGA archetype); --name then renders as the holder line")
     parser.add_argument("--tagline", help="optional tagline beside the issuer row (overrides the default tier tagline)")
+    parser.add_argument("--date", help="scan date YYYY-MM-DD for the card (JSON input only; default: today)")
     parser.add_argument("--out-dir", type=Path, help="default: the report's directory")
     parser.add_argument("--no-png", action="store_true", help="write HTML only")
     args = parser.parse_args()
 
-    text = args.report.read_text(encoding="utf-8")
-    traits = parse_traits(text)
-    date, foot = parse_meta(text)
+    if args.report.suffix.lower() == ".json":
+        obj = json.loads(args.report.read_text(encoding="utf-8"))
+        traits, date, foot = from_record(obj, args.date)
+    else:
+        text = args.report.read_text(encoding="utf-8")
+        traits = parse_traits(text)
+        date, foot = parse_meta(text)
 
     out_dir = (args.out_dir or args.report.parent).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
