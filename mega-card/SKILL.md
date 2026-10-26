@@ -28,11 +28,11 @@ From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT 
 | Code | Group | Traits |
 |---|---|---|
 | INT | Intent | T01, T02, T05, T06 |
-| KTX | Context | T03, T04, T09, T10, T11, T12 |
+| CTX | Context | T03, T04, T09, T10, T11, T12 |
 | DIA | Diagnosis | T07, T08, T13 |
 | DEL | Delegation | T14, T15, T16, T17, T19, T20 |
 | STR | Steering | T18, T21, T22 |
-| WER | Verification | T23, T24 |
+| VER | Verification | T23, T24 |
 
 Change the groups or trait names: `GROUPS` and `NAMES` in `template.html`.
 
