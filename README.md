@@ -78,7 +78,7 @@ It writes `mega-skill-web-<date>.html` and `.png` next to the JSON. In Claude Co
 ### mega-card-graphite
 <img width="3200" height="2680" alt="mega-card-graphite-new" src="https://github.com/user-attachments/assets/b5d4fca8-9575-4682-a81b-fde663b3d4cc" />
 
-## mega card
+### mega card
 <img width="3200" height="2680" alt="mega-card-new" src="https://github.com/user-attachments/assets/b56c55fe-10cb-444e-a8d5-0f566260bdc9" />
 
 
