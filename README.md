@@ -6,8 +6,8 @@ Skills for [Claude Code](https://claude.com/claude-code) that turn a **MEGA Asse
 
 | Skill | What it does |
 |---|---|
-| [mega-card](mega-card/SKILL.md) | FIFA/FUT-style card and a 24-spoke skill radar from a MEGA Assessment report. HTML and PNG (headless Chrome). |
-| [mega-card-graphite](mega-card-graphite/SKILL.md) | Graphite/brass restyle of mega-card: the same FUT card and 24-trait radar in a dark, monochrome-luxe style, with a scouting-report panel and MEGA's 5-pillar grouping. Also takes a MEGA record JSON directly. |
+| [mega-card](mega-card/SKILL.md) | FIFA/FUT-style card and a 24-spoke skill radar from a MEGA record JSON. HTML and PNG (headless Chrome). |
+| [mega-card-graphite](mega-card-graphite/SKILL.md) | Graphite/brass restyle of mega-card: the same FUT card and 24-trait radar in a dark, monochrome-luxe style, with a scouting-report panel and MEGA's 5-pillar grouping. |
 
 ## Prerequisites
 
@@ -55,29 +55,6 @@ python3 ~/.claude/skills/mega-card-graphite/render.py mega-assessment-<id>.json 
 
 It writes `mega-skill-web-<date>.html` and `.png` next to the JSON. In Claude Code the headless-Chrome step must run outside the sandbox (`dangerouslyDisableSandbox: true`); or pass `--no-png` for HTML only. Simplest of all: once the skill is installed, just ask your agent — *"make my MEGA card from that assessment"* — and it runs this for you.
 
-<details>
-<summary>Prefer a hand-written report instead of the JSON?</summary>
-
-`render.py` also accepts a `mega-assessment-*.md` with a trait table:
-
-```markdown
-**Scan date:** 2026-10-26
-
-| Metric | Value |
-|---|---|
-| Task episodes | 120 |
-| Sessions | 14 |
-| Window | 2026-08-01 → 2026-10-20 (80 days) |
-
-| ID | Trait | eligible | applied | declined | missed | verified |
-|---|---|---|---|---|---|---|
-| T01 | Intent Clarity | 90 | 70 | 0 | 20 | 5 |
-| ... one row for every trait T01 through T24 ... |
-```
-
-All 24 rows (T01–T24) must be present; the footer fields are optional.
-</details>
-
 ### Options
 
 | Option | Effect |
@@ -85,7 +62,7 @@ All 24 rows (T01–T24) must be present; the footer fields are optional.
 | `--name NAME` | Name on the card. Without `--archetype`, it is the headline. |
 | `--archetype TEXT` | Headline (e.g. your MEGA archetype); `--name` then shows as the cardholder line beneath it. |
 | `--tagline TEXT` | Replaces the default tier tagline. |
-| `--date YYYY-MM-DD` | Scan date on the card (JSON input only; default: today). |
+| `--date YYYY-MM-DD` | Scan date on the card (default: today). |
 | `--out-dir DIR` | Where to write the files (default: next to the input). |
 | `--no-png` | Write the HTML only; skip the screenshot. |
 

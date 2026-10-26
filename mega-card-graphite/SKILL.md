@@ -1,6 +1,6 @@
 ---
 name: mega-card-graphite
-description: Graphite/brass FUT-style card plus a 24-spoke skill radar from a MEGA Assessment report (mega-assessment-*.md). HTML and PNG (headless Chrome). A dark, monochrome-luxe restyle of mega-card. Use when the user wants a player card, skill web, radar, or skills chart of their MEGA / assessment result in a dark style.
+description: Graphite/brass FUT-style card plus a 24-spoke skill radar from a MEGA record JSON (the challenge POST body). HTML and PNG (headless Chrome). A dark, monochrome-luxe restyle of mega-card. Use when the user wants a player card, skill web, radar, or skills chart of their MEGA / assessment result in a dark style.
 ---
 
 # MEGA card — graphite variant
@@ -15,12 +15,12 @@ A dark graphite + brushed-brass restyle of `mega-card`: the same FUT-style overa
 
 ## Steps
 
-1. **Find the assessment.** Path from the argument — either a **MEGA record JSON** (the exact body posted when the agent runs the `mega.dev/challenge.md` assessment) or a `mega-assessment-*.md` report. No argument: the newest `mega-assessment-*.{json,md}` in cwd. Nothing found: ask for the path.
+1. **Find the record.** The MEGA **record JSON** — the exact body posted when the agent runs the `mega.dev/challenge.md` assessment. Path from the argument; otherwise the newest `mega-assessment-*.json` in cwd (the challenge writes it to the OS temp dir, so you usually pass that path). Nothing found: ask for the path.
 2. **Generate.** Headless Chrome hangs in the sandbox, so run with `dangerouslyDisableSandbox: true`:
    ```bash
-   python3 ~/.claude/skills/mega-card-graphite/render.py <assessment.json|report.md> [--name NAME] [--archetype TEXT] [--tagline TEXT] [--date YYYY-MM-DD] [--out-dir DIR] [--no-png]
+   python3 ~/.claude/skills/mega-card-graphite/render.py <record.json> [--name NAME] [--archetype TEXT] [--tagline TEXT] [--date YYYY-MM-DD] [--out-dir DIR] [--no-png]
    ```
-   Files land next to the input as `mega-skill-web-<date>.html/.png`. The script errors if any of T01–T24 is missing. A record **JSON** supplies the 24 trait counts and the episode/day totals (scan date defaults to today, override with `--date`); the archetype is not in the record, so pass MEGA's archetype via `--archetype`. With `--archetype` the headline shows that text (e.g. a MEGA archetype such as "The Architect") and `--name` drops to a cardholder line beneath it; without it, `--name` is the headline.
+   Files land next to the record as `mega-skill-web-<date>.html/.png`. The record supplies the 24 trait counts (`traits[].counts`) and the episode/day totals (`coverage`); scan date defaults to today (`--date` to override). The script errors if any of T01–T24 is missing. The archetype is **not** in the record, so pass MEGA's archetype (from the claim page) via `--archetype`: the headline then shows it (e.g. "The Architect") with `--name` as the cardholder line beneath; without `--archetype`, `--name` is the headline.
 3. **Look at the PNG once** (Read). Fix clipped text or overlaps in `template.html`, never in the generated file.
 4. **Publish** the HTML via Artifact (favicon `⚓`) unless the user only wants the PNG. Give the link and the PNG path.
 
@@ -34,4 +34,4 @@ Change the grouping or trait names: `PILLARS` and `NAMES` in `template.html`.
 
 ## Credit
 
-A restyle of **mega-card** by piotrkrych2 — https://github.com/piotrkrych2/Random-Skills. `render.py` is adapted from his original (added `--archetype`/`--tagline` and MEGA-record-JSON input); `template.html` and this `SKILL.md` are new.
+A restyle of **mega-card** by piotrkrych2 — https://github.com/piotrkrych2/Random-Skills. `render.py` is adapted from his original (reads the MEGA record JSON instead of a markdown report, adds `--archetype`/`--tagline`); `template.html` and this `SKILL.md` are new.

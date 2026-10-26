@@ -1,6 +1,6 @@
 ---
 name: mega-card
-description: FIFA/FUT-style card plus a 24-spoke skill radar from a MEGA Assessment report (mega-assessment-*.md). Generates HTML and PNG, and can publish as an artifact. Use when the user asks for a player card, skill web, radar, or skills chart from a MEGA / assessment result.
+description: FIFA/FUT-style card plus a 24-spoke skill radar from a MEGA record JSON (the challenge POST body). Generates HTML and PNG, and can publish as an artifact. Use when the user asks for a player card, skill web, radar, or skills chart from a MEGA / assessment result.
 ---
 
 # MEGA card
@@ -9,12 +9,12 @@ From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT 
 
 ## Steps
 
-1. **Find the report.** Path from the argument. No argument: the newest `mega-assessment-*.md` in cwd, then in `~/projects/tmp/`. Nothing found: ask for the path.
+1. **Find the record.** The MEGA **record JSON** — the body posted when the agent runs the `mega.dev/challenge.md` assessment. Path from the argument; otherwise the newest `mega-assessment-*.json` in cwd, then in `~/projects/tmp/` (the challenge writes it to the OS temp dir, so you usually pass that path). Nothing found: ask for the path.
 2. **Generate.** Bash with `dangerouslyDisableSandbox: true` — headless Chrome hangs inside the sandbox and writes no screenshot:
    ```bash
-   python3 ~/.claude/skills/mega-card/render.py <report.md> [--name NAME] [--out-dir DIR] [--no-png]
+   python3 ~/.claude/skills/mega-card/render.py <record.json> [--name NAME] [--date YYYY-MM-DD] [--out-dir DIR] [--no-png]
    ```
-   Default name `KRYCH`; files land next to the report as `mega-skill-web-<date>.html/.png`. The script errors if any of T01-T24 is missing from the report.
+   Default name `KRYCH`; files land next to the record as `mega-skill-web-<date>.html/.png`. The record supplies the 24 trait counts (`traits[].counts`) and the episode/day totals (`coverage`); scan date defaults to today (`--date` to override). The script errors if any of T01-T24 is missing.
 3. **Look at the PNG once** (Read). Watch for clipped text and overlapping labels. Make fixes in `template.html`, not in the generated file.
 4. **Publish** the generated HTML via Artifact (favicon `🕸️`), unless the user only wants the PNG. Give the link and the PNG path.
 
@@ -36,7 +36,7 @@ From a MEGA Assessment report it builds a graphic: a bronze / silver / gold FUT 
 
 Change the groups or trait names: `GROUPS` and `NAMES` in `template.html`.
 
-## Report parsing
+## Record parsing
 
-- Traits: the first `| Txx | Name | eligible | applied | declined | missed | verified |` table row for each ID. Indicator table rows (a kebab-case slug in the second column) are skipped.
-- Card footer: the report labels `**Scan date:**`, `Task episodes`, `Sessions` / `Scanned`, `(N days)` — `render.py` also accepts the Polish equivalents (`Data skanu`, `Epizody zadaniowe`, `Przeskanowane`, `dni`). A missing field is skipped.
+- Traits: 24 counts from `traits[].counts` — `eligible`, `applied`, `declined` per `trait_id`. The script errors if any of T01–T24 is missing.
+- Card footer: `coverage.task_episodes` and `coverage.window_days` become the episode/day line; the scan date defaults to today unless `--date` is passed.

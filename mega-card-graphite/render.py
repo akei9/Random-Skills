@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Render a FUT-style skill card and a 24-spoke radar from a MEGA Assessment report."""
+"""Render a FUT-style skill card and a 24-spoke radar from a MEGA record JSON."""
 import argparse
 import datetime
 import json
-import re
 import shutil
 import subprocess
 import sys
@@ -15,13 +14,6 @@ TEMPLATE = HERE / "template.html"
 PROFILE_DIR = Path.home() / ".cache" / "mega-card" / "chrome-profile"
 WINDOW = "1600,1240"
 
-TRAIT_ROW = re.compile(
-    r"^\|\s*(T\d{2})\s*\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*$",
-    re.M,
-)
-# The indicator table reuses trait ids; its second column is a kebab-case indicator slug.
-INDICATOR_SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)+$")
-
 CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -30,40 +22,6 @@ CHROME_CANDIDATES = [
     "chromium",
     "chromium-browser",
 ]
-
-
-def parse_traits(text):
-    traits = {}
-    for m in TRAIT_ROW.finditer(text):
-        tid, name = m.group(1), m.group(2)
-        if INDICATOR_SLUG.match(name) or tid in traits:
-            continue
-        traits[tid] = [int(m.group(3)), int(m.group(4)), int(m.group(5))]
-    missing = [f"T{i:02d}" for i in range(1, 25) if f"T{i:02d}" not in traits]
-    if missing:
-        sys.exit(f"Report has no trait rows for: {', '.join(missing)}")
-    return traits
-
-
-def parse_meta(text):
-    def num(pattern):
-        m = re.search(pattern, text)
-        return int(m.group(1)) if m else None
-
-    # Report labels: English first, Polish kept so older reports still parse.
-    date = re.search(r"\*\*(?:Scan date|Data skanu):\*\*\s*(\d{4}-\d{2}-\d{2})", text)
-    episodes = num(r"(?:Task episodes|Epizody zadaniowe)\s*\|\s*\**(\d+)")
-    sessions = num(r"(?:Sessions|Scanned|Przeskanowane)\s*\|\s*(\d+)")
-    days = num(r"\((\d+)\s*(?:days|dni)\)")
-
-    parts = []
-    if episodes is not None:
-        parts.append(f"{episodes} {'episode' if episodes == 1 else 'episodes'}")
-    if sessions is not None:
-        parts.append(f"{sessions} {'session' if sessions == 1 else 'sessions'}")
-    if days is not None:
-        parts.append(f"{days} {'day' if days == 1 else 'days'}")
-    return (date.group(1) if date else None), " · ".join(parts)
 
 
 def from_record(obj, date_override=None):
@@ -139,26 +97,21 @@ def render_png(html_path, png_path, chrome):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("report", type=Path, help="a MEGA record JSON (the challenge POST body) or a mega-assessment-*.md report")
+    parser.add_argument("record", type=Path, help="a MEGA record JSON (the challenge POST body)")
     parser.add_argument("--name", default="KRYCH", help="name printed on the card")
     parser.add_argument("--archetype", help="optional headline (e.g. a MEGA archetype); --name then renders as the holder line")
     parser.add_argument("--tagline", help="optional tagline beside the issuer row (overrides the default tier tagline)")
-    parser.add_argument("--date", help="scan date YYYY-MM-DD for the card (JSON input only; default: today)")
-    parser.add_argument("--out-dir", type=Path, help="default: the report's directory")
+    parser.add_argument("--date", help="scan date YYYY-MM-DD for the card (default: today)")
+    parser.add_argument("--out-dir", type=Path, help="default: the record's directory")
     parser.add_argument("--no-png", action="store_true", help="write HTML only")
     args = parser.parse_args()
 
-    if args.report.suffix.lower() == ".json":
-        obj = json.loads(args.report.read_text(encoding="utf-8"))
-        traits, date, foot = from_record(obj, args.date)
-    else:
-        text = args.report.read_text(encoding="utf-8")
-        traits = parse_traits(text)
-        date, foot = parse_meta(text)
+    obj = json.loads(args.record.read_text(encoding="utf-8"))
+    traits, date, foot = from_record(obj, args.date)
 
-    out_dir = (args.out_dir or args.report.parent).expanduser().resolve()
+    out_dir = (args.out_dir or args.record.parent).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"mega-skill-web-{date}" if date else f"{args.report.stem}-skill-web"
+    stem = f"mega-skill-web-{date}"
     html_path = out_dir / f"{stem}.html"
     png_path = out_dir / f"{stem}.png"
 
