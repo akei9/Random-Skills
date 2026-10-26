@@ -73,9 +73,14 @@ It writes `mega-skill-web-<date>.html` and `.png` next to the JSON. In Claude Co
 - Overall = mean of the measured traits. Tier: 75+ gold, 65–74 silver, below 65 bronze.
 - **These scores and the archetype are not MEGA's.** The scores are a local heuristic for the visual, and `--archetype` is whatever text you pass. Your MEGA claim page is the authoritative result; this card is a stylized, shareable snapshot of the same counts.
 
-## Card Example (mega-card-graphite)
+## Card Example 
 
-<img width="1475" height="1404" alt="Screenshot 2026-09-13 at 23 59 40" src="https://github.com/user-attachments/assets/a08bd72f-9efc-4ec6-8828-007c8338295e" />
+### mega-card-graphite
+<img width="3200" height="2680" alt="mega-card-graphite-new" src="https://github.com/user-attachments/assets/b5d4fca8-9575-4682-a81b-fde663b3d4cc" />
+
+## mega card
+<img width="3200" height="2680" alt="mega-card-new" src="https://github.com/user-attachments/assets/b56c55fe-10cb-444e-a8d5-0f566260bdc9" />
+
 
 ## Credit
 
