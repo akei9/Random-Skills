@@ -12,7 +12,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TEMPLATE = HERE / "template.html"
 PROFILE_DIR = Path.home() / ".cache" / "mega-card" / "chrome-profile"
-WINDOW = "1600,1240"
+WINDOW = "1600,1340"
 
 CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
